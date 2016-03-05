@@ -198,6 +198,8 @@ class Queries(object):
         writer = copy.deepcopy(self.outputWriters)
         for iter in range(len(self.outputWriters)):
             writer[iter]['settings']['typeNames'] = typeNames
+            if not 'rootPrefix' in writer[iter]['settings']:
+                writer[iter]['settings']['rootPrefix'] = rootPrefix
         return writer
 
 class HostSets(object):
