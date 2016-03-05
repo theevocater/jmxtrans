@@ -85,8 +85,8 @@ class Queries(object):
                 for attribute in outputWriters_attributes:
                     if attribute in outputWriter:
                       outputWriterEntry[attribute] = outputWriter[attribute]
-                    else:
-                      outputWriterEntry[attribute] = None
+                    # else:
+                      # outputWriterEntry[attribute] = None
                 self.outputWriters.append(outputWriterEntry)
 
     def create_query_entry(self, query_name, rootPrefix):
@@ -197,9 +197,19 @@ class Queries(object):
         
         writer = copy.deepcopy(self.outputWriters)
         for iter in range(len(self.outputWriters)):
-            writer[iter]['settings']['typeNames'] = typeNames
-            if not 'rootPrefix' in writer[iter]['settings']:
-                writer[iter]['settings']['rootPrefix'] = rootPrefix
+            # if there are 'settings', add overrides there
+            settings = {}
+            if 'settings' in writer[iter] and writer[iter]['settings'] is not None:
+                settings = writer[iter]['settings']
+            else:
+                settings = writer[iter]
+
+            # override the per stat typeNames
+            settings['typeNames'] = typeNames
+
+            if not 'rootPrefix' in settings:
+                settings['rootPrefix'] = rootPrefix
+
         return writer
 
 class HostSets(object):
@@ -255,7 +265,7 @@ if __name__ == '__main__':
         "obj", "resultAlias", "attr", "typeName",
         "allowDottedKeys", "useAllTypeNames", "useObjDomainAsKey",
     ]
-    outputWriters_attributes = ["settings", "@class"]
+    outputWriters_attributes = ["settings", "@class", "host", "port", "rootPrefix", "typeNames", "booleanAsNumber"]
     
     if len(sys.argv) != 2:
         usage()
